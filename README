@@ -1,0 +1,98 @@
+README for htmltoc
+
+	A Table of Contents generator for HTML documents.
+	<URL:http://www.oac.uci.edu/indiv/ehood/htmltoc.html>
+
+---------------------------------------------------------------------------
+    Copyright (C) 1994-1997  Earl Hood, ehood@medusa.acs.uci.edu
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
+CONTENTS of distribution:
+
+CHANGES		  History of changes to htmltoc
+README		  The file you are reading
+doc/		  Documentation for htmltoc
+htmltoc*	  Perl program
+install.me*	  Installation program
+
+---------------------------------------------------------------------------
+INSTALLATION
+
+The documentation contains a section on installing htmltoc for Unix
+machines.
+
+    Interactive Install:
+
+        Run the following command:
+
+            perl install.me
+
+        The installation program will ask you a series of questions on
+        where the Perl executable is and where to put htmltoc files.
+        Just hit <CR> to accept the default values listed in ()'s.
+
+    Batch Install:
+
+        1. Edit the file 'install.cfg'.
+        2. Run the following command:
+
+            perl install.me install.cfg
+
+        The installation program will output information on what
+        is being installed and where it is being installed.
+
+	NOTE
+	    htmltoc has no library files to install.  Hence $dolib
+	    should equal zero.
+
+Notes on Installation Program
+
+    o The '#!' line in the installed htmltoc program is set to
+      point to the Perl executable specified in the installation
+      process.
+
+    o If you specify paths that do not exist, the install.me
+      program will create the path ONLY if running in interactive
+      more.  If using a configuration file (eg: install.cfg) you
+      must check that all paths specified exist.
+
+---------------------------------------------------------------------------
+BUGS/COMMENTS/SUGGESTIONS?
+
+    If you have any bugs/comments/suggestions about htmltoc, feel free
+    to drop me an e-mail message at ehood@medusa.acs.uci.edu.
+
+    If it is a bug you are reporting, please include the following in
+    your message:
+
+        o  Version of Perl (can be retrievied by "perl -v").
+        o  Version of the program in question.
+        o  The exact command-line used to invoke the program.
+        o  Error/diagnostic message from the program.
+        o  Any other information that might prove useful.
+
+    If you have questions on what htmltoc can, or cannot do, please
+    read the documnetation first.  If the docs do not answer your
+    question(s), feel free to e-mail me.
+
+---------------------------------------------------------------------------
+
+* Thanks to the everone for finding bugs/giving comments/whatever
+  that effected the functionality of htmltoc.
+
+---------------------------------------------------------------------------
+Earl Hood, ehood@medusa.acs.uci.edu

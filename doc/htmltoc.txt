@@ -1,0 +1,473 @@
+
+                                    HTMLTOC
+                                       
+   
+   
+   A Perl program to generate a Table of Contents (ToC) for HTML
+   documents.
+   
+   For the latest information on htmltoc, see
+   <URL:http://www.oac.uci.edu/indiv/ehood/htmltoc.html>.
+     _________________________________________________________________
+   
+Description
+
+   
+   
+   htmltoc allows you to specify "significant elements" that will be
+   hyperlinked to in a "Table of Contents" (ToC) for a given set of HTML
+   documents.
+   
+   Basically, the ToC generated is a multi-level level list containing
+   links to the significant elements. htmltoc inserts the links into the
+   ToC to significant elements at a level specified by the user.
+   
+   Example:
+          
+          
+          If H1s are specified as level 1, than they appear in the first
+          level list of the ToC. If H2s are specified as a level 2, than
+          they appear in a second level list in the ToC.
+          
+   
+   
+   See ToC Map File on how to tell htmltoc what are the significant
+   elements and at what level they should occur in the ToC.
+   
+   In standard operation, the created ToC is sent to standard output, or
+   to the file specified by the -toc command-line option. For more
+   information on controlling the contents of the created ToC, see
+   Formatting the ToC.
+   
+   htmltoc also supports the ability to incorporate the ToC into the HTML
+   document itself via the -inline command-line option. This only works
+   if a single HTML file is being processed. See Inlining the ToC for
+   more information.
+   
+   In order for htmltoc to support linking to significant elements,
+   htmltoc inserts anchors into the significant elements. Since this
+   requires modification of the original HTML document(s), the originals
+   are backed up with a ".org" suffix appended to the filenames.
+   
+   The following sections give more information on htmltoc:
+     * Usage
+     * ToC Map File
+     * Formatting the ToC
+     * Inlining the ToC
+     * Notes
+     * Limitations
+     * Bugs
+       
+   
+     _________________________________________________________________
+   
+Usage
+
+   
+   
+   htmltoc is invoked from a Unix shell, with the following syntax:
+   
+   % htmltoc [options] file ... > tocfile
+   % htmltoc -toc tocfile [options] file ...
+   % htmltoc -inline [options] file
+   
+   The following options are available:
+   
+   -entrysep string
+          
+          
+          Use string as the entry separator for same level entries that
+          are specified not to use the LI element to list each entry. The
+          default value is ", ". See Formatting the ToC for more
+          information.
+          
+   -footer filename
+          
+          
+          Append filename, containing HTML markup, to the end of the ToC.
+          This option is invalid when the -inline option is specified.
+          
+   -header filename
+          
+          
+          Prepend filename, containing HTML markup, to the beginning of
+          the ToC. The desired format of filename is slightly different
+          if the ToC is being inlined, or is an external document. See
+          Formatting the ToC and Inlining the ToC for more information.
+          
+   -help
+          
+          
+          Short message giving all options available to htmltoc.
+          
+   -inline
+          
+          
+          Insert ToC into the document being processed. This options is
+          only valid if one HTML file is being processed. See Inlining
+          the ToC for more information on this option.
+          
+   -noorg
+          
+          
+          htmltoc normally backs up the original HTML files with a ".org"
+          extension. When this option is specified, htmltoc will remove
+          the backup files when done.
+          
+   -ol
+          
+          
+          Put level 1 ToC entries in an order list (OL).
+          
+   -prefix string
+          
+          
+          Use string as the prefix for ID values used in NAME/HREF
+          attributes in anchors (A) for linking ToC entries to the
+          document(s). The default prefix is "xtocid".
+          
+   -quiet
+          
+          
+          htmltoc normally prints out informative messages on what it is
+          doing. This option suppress these messages.
+          
+   -textonly
+          
+          
+          htmltoc by default, preserves HTML markup that exists in a
+          significant element to appear in the ToC. This options tells
+          htmltoc to only use the textual content of the ToC element. If
+          this option is not specified, htmltoc will still ignore the
+          following tags: A, HR, P, IMG.
+          
+   -title string
+          
+          
+          Set the title, (i.e. TITLE element) of the generated ToC
+          document to string. This option has no affect if the -header or
+          -inline options are specified. The default title is "Table of
+          Contents".
+          
+   -toc file
+          
+          
+          By default, the ToC is sent to standard output (unless the
+          -inline option is specified). This option explicitly tells
+          htmltoc to output the ToC to file.
+          
+   -toclabel string
+          
+          
+          Put string before ToC. This option has no effect if the -header
+          option is specified. The default ToC label is "<H1>Table of
+          Contents</H1>".
+          
+   -tocmap filename
+          
+          
+          Use filename as the ToC map file. By default, htmltoc only
+          indexes H1s and H2s. See ToC Map File for more information.
+          
+   -useorg
+          
+          
+          This option tells htmltoc to use the ".org" backup files
+          already existing. In normal operation, htmltoc copies the files
+          to be processed to the same filenames with ".org" suffixes.
+          Then, htmltoc reads the ".org" files to find significant
+          elements, and writes the new (modified) files to the filenames
+          without the ".org" suffix. This operation gives the appearance
+          that the files were editted in-place.
+          
+          In other words, the -useorg option tells htmltoc not to perform
+          the initial copying of the files to ".org" files. However, if a
+          ".org" file does not exist for a given file, htmltoc will
+          perform the initial copy operation.
+          
+   
+   
+   Any arguments that are not part of the command-line options are
+   treated as HTML files to be processed.
+   
+   When htmltoc is running, htmltoc will normally output some informative
+   messages on what htmltoc is doing, or done. These messages can be
+   suppressed via the -quiet option.
+     _________________________________________________________________
+   
+ToC Map File
+
+   
+   
+   The ToC map file allows you to tell htmltoc what significant elements
+   to include in the ToC, what level they should appear in the ToC, and
+   any text to include before and/or after the ToC entry. The format of
+   the map file is as follows:
+significant_element:level:sig_element_end:before_text,after_text
+significant_element:level:sig_element_end:before_text,after_text
+...
+
+   
+   
+   Each line of the map file contains a series of fields separated by the
+   `:' character. The definition of each field is as follows:
+   
+   significant_element
+          
+          
+          The tag name of the significant element. Example values are H1,
+          H2, H5. This field is case-insensitive.
+          
+   level
+          
+          
+          What level the significant element occupies in the ToC. This
+          valid must be numeric, and non-zero. If the value is negative,
+          consective entries represented by the significant_element will
+          be separated by the value set by -entrysep option.
+          
+   sig_element_end (Optional)
+          
+          
+          The tag name that signifies the termination of the
+          significant_element.
+          
+          Example: The DT tag is a marker in HTML and not a container.
+          However, one can index DT sections of a definition list by
+          using the value DD in the sig_element_end field (this does
+          assume that each DT has a DD following it).
+          
+          If the sig_element_end is empty, then the corresponding end tag
+          of the specified significant_element is used. Example: If H1 is
+          the significant_element, than htmltoc looks for a "</H1>" for
+          terminating the significant_element.
+          
+          Caution: the sig_element_end value should not contain the `<`
+          and `>' tag delimiters. If you want the sig_element_end to be
+          the end tag of another element than that of the
+          significant_element, than use "/element_name".
+          
+          The sig_element_end field is case-insensitive.
+          
+   before_text,after_text (Optional)
+          
+          
+          This is literal text that will be inserted before and/or after
+          the ToC entry for the given significant_element. The
+          before_text is separated from the after_text by the `,'
+          character (which implies a comma cannot be contained in the
+          before/after text). See examples following for the use of this
+          field.
+          
+   
+   
+   In the map file, the first two fields MUST be specified.
+   
+   Following are a few examples to help illustrate how a ToC map file
+   works.
+   
+  EXAMPLE 1
+  
+   
+   
+   The following map file reflects the default mapping htmltoc uses if no
+   map file is explicitly specified:
+# Default mapping for htmltoc
+# Comments can be inserted in the map file via the '#' character
+H1:1 # H1 are level 1 ToC entries
+H2:2 # H2 are level 2 ToC entries
+
+  EXAMPLE 2
+  
+   
+   
+   The following map file makes use of the before/after text fields:
+# A ToC map file that adds some formatting
+H1:1::<STRONG>,</STRONG>      # Make level 1 ToC entries <STRONG>
+H2:2::<EM>,</EM>              # Make level 2 entries <EM>
+H2:3                          # Make level 3 entries as is
+
+  EXAMPLE 3
+  
+   
+   
+   The following map file tries to index definition terms:
+# A ToC map file that can work for Glossary type documents
+H1:1
+H2:2
+DT:3:DD:<EM>,</EM>    # Assumes document has a DD for each DT, otherwise ToC
+                      # will get entries with alot of text.
+
+  EXAMPLE 4
+  
+   
+   
+   The following map file demonstrates how one can bastardize the use
+   HTML elements:
+# A ToC map file that wraps ToC entries in header tags. This is illegal
+# HTML, but it looks pretty good in Mosaic.
+H1:1::<H3>,</H3>
+H2:2::<H4>,</H4>
+H3:3::<H5>,</H5>
+
+   
+     _________________________________________________________________
+   
+Formatting the ToC
+
+   
+   
+   The ToC Map File gives you control on how the ToC entries may look,
+   but htmltoc has other options to affect the final appearance of the
+   ToC file created.
+   
+   With the -header option, htmltoc will prepend the contents of the file
+   before the generated ToC. This allows you to have introductory text,
+   or any other text, before the ToC.
+   
+   Note:
+          
+          
+          If you use the -header option, make sure the file specified
+          contains the opening HTML tag, the HEAD element (containing the
+          TITLE element), and the opening BODY tag. However, these
+          tags/elements should not be in the header file if the -inline
+          options is used. See Inlining the ToC for information on what
+          the header file should contain for inlining the ToC.
+          
+   
+   
+   With the -footer option, htmltoc will append the contents of the file
+   after the generated ToC.
+   
+   Note:
+          
+          
+          If you use the -footer, make sure it includes the closing BODY
+          and HTML tags.
+          
+   
+   
+   htmltoc will add the appropriate HTML markup to if either the -header
+   or -footer option is not specified to insure a valid HTML document is
+   created for the ToC.
+   
+   If you do not want/need to deal with header, and footer, files, then
+   htmltoc allows you specify the title, -title option, of the ToC file;
+   and it allows you to specify a heading, or label, to put before ToC
+   entries' list, the -toclabel option. Both options have default values,
+   see Usage for more information on each option.
+     _________________________________________________________________
+   
+Inlining the ToC
+
+   
+   
+   htmltoc supports the ability to incorporating the ToC directly into an
+   HTML document via the -inline option. Inlining can only occur if one,
+   and ONLY one, HTML file is being processed, AND the HTML file contains
+   an opening BODY tag.
+   
+   The ToC generated is inserted right after the opening BODY tag, and
+   before any other HTML markup in the file. If the -header option is
+   specified, then the contents of the specified file are inserted after
+   the BODY tag, but before the ToC. Otherwise, htmltoc inserts the text
+   specified by the -toclabel option.
+   
+   Note:
+          
+          
+          The header file should not containing the beginning HTML tag
+          and HEAD element since the HTML file being processed should
+          already contains these tags/elements.
+          
+   
+     _________________________________________________________________
+   
+Notes
+
+     *
+       
+       For the average user, the only thing to worry about is the -title
+       and -toclabel options. Everything else is provided for customizing
+       the behavior of htmltoc.
+     *
+       
+       htmltoc is smart enough to detect anchors inside significant
+       elements. If the anchor defines the NAME attribute, htmltoc uses
+       the value. Else, it adds its own NAME attribute to the anchor.
+     *
+       
+       htmltoc will not process files related to command-line options if
+       they are also specified to be processed for ToC significant
+       elements. Example: The command, "htmltoc -header header.html -toc
+       toc.html *.html" will cause header.html and toc.html to be
+       included in the HTML files to processed due to shell filename
+       globbing of "*.html". htmltoc is smart of enough to detect this,
+       and exempt header.html and toc.html from being processed for ToC
+       significant elements.
+     *
+       
+       The TITLE element is treated specially if specified in the ToC map
+       file. It is illegal to insert anchors (A) into TITLE elements.
+       Therefore, htmltoc will actually link to the filename itself
+       instead of the TITLE element of the document.
+     *
+       
+       htmltoc will ignore significant elements if it does not contain
+       any non-whitespace characters. A warning message is generated if
+       such a condition exists.
+       
+   
+     _________________________________________________________________
+   
+Limitations
+
+     *
+       
+       htmltoc is not very efficient (memory and speed), and can be
+       extremely slow for large documents.
+     *
+       
+       Invalid markup will be generated if a significant element is
+       contained inside of an anchor. For example:
+       
+       <A NAME="foo"><H1>The FOO command</H1></A>
+       
+       will be converted to (if H1 is a significant element),
+       
+       <A NAME="foo"><H1><A NAME="xtocidXXXXX">The</A> FOO
+       command</H1></A>
+       
+       which is illegal since anchors cannot be nested.
+       
+       It is better style to put anchor statements within the element to
+       be anchored. For example, the following is preferred:
+       
+       <H1><A NAME="foo">The FOO command</A></H1>
+       
+       htmltoc will detect the "foo" NAME and use it.
+     *
+       
+       NAME attributes without quotes are not recognized.
+     *
+       
+       htmltoc will possibly not work correctly if the characters < and >
+       are not solely used to delimit HTML elements.
+       
+   
+     _________________________________________________________________
+   
+Bugs
+
+   
+   
+   Hopefully, they have been fixed.
+     _________________________________________________________________
+   
+    Earl Hood, ehood@convex.com
+    
+   
+     _________________________________________________________________
+   
+    Document converted from Frame by MifMucker

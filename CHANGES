@@ -1,0 +1,73 @@
+CHANGES for htmltoc
+
+	A Table of Contents generator for HTML documents.
+	<URL:http://www.oac.uci.edu/indiv/ehood/htmltoc.html>
+
+MM/DD/YY
+===========================================================================
+02/28/96	(1.2.1)
+
+	o  Changed "$/ = 0777;" to "undef $/;" for reading in an entire
+	   file.  Perl is inconsistent across versions on using 0777
+	   which causes no TOC to be generated.
+
+===========================================================================
+04/19/96	(1.2.0)
+
+	o  Added the ability to specify ToC entries at the same level
+	   to be separated by something other than <LI>.  The separator
+	   string can be controlled via the -entrysep option.  The
+	   default value is ", " (minus the quotes).
+
+	o  Strip beginning and trailing whitespace from significant
+	   element content when listed in the ToC.
+
+	o  Removed filename from hrefs in inline ToCs.
+
+	o  The expression /<body.*>/i is now used to determine location
+	   of inline TOC.
+
+	o  Escaped @ in usage statement for Perl 5.
+
+	o  Fixed typo in cp() routine where error text used $dest instead
+	   of $dst.
+
+===========================================================================
+03/31/95	(1.1.1)
+
+	o  Fixed a statement that caused Perl 5 to grok.
+
+===========================================================================
+09/30/94	(1.1.0)
+
+	o  SGML comment declarations are preserved in processed documents.
+
+===========================================================================
+07/25/94	(1.0.0)
+
+	o  Added a -useorg option.  This tells htmltoc to use
+	   previously generated ".org" files as the html source
+	   to process if they exist.  Good if error occured during
+	   a previous run.
+
+	o  Properly detects NAME attributes in anchors with whitespace
+	   around the '=' character.
+
+	o  Recognizes single quotes as delimiters for the value of
+	   a NAME attribute.
+
+	o  Some informative output to STDERR occurs during processing.
+	   This can be supressed with the -quiet option.
+
+	o  Warning generated if a significant element contains no
+	   textual content.
+
+	o  IMG tag explicity ignored if contained in significant element.
+
+===========================================================================
+07/21/94	(1.0.0 beta)
+
+	o Initial release
+
+===========================================================================
+Earl Hood, ehood@convex.hp.com
